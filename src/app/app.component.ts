@@ -6,6 +6,6 @@ import { RouterOutlet } from '@angular/router';
   selector: 'jv-root',
   standalone: true,
   imports: [CommonModule, RouterOutlet],
-  template: ``,
+  template: `<router-outlet />`,
 })
 export class AppComponent {}

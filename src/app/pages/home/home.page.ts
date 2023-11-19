@@ -13,19 +13,19 @@ import { RouterLink } from '@angular/router';
 
         <div class="grid w-full max-w-4xl grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4">
           @for (difficulty of difficulties; track $index) {
-          <a
-            role="button"
-            class="flex flex-col items-center rounded-lg bg-neutral-700 p-6 shadow transition-colors hover:bg-neutral-600"
-            [routerLink]="['/g']"
-            [queryParams]="{ d: difficulty.code }"
-          >
-            <h3 class="text-lg">{{ difficulty.name }}</h3>
-            <p>
-              @for (star of arrayRef(4); track index; let index = $index) {
-              <span class="text-xl">{{ index <= difficulty.code ? '&starf;' : '&star;' }}</span>
-              }
-            </p>
-          </a>
+            <a
+              role="button"
+              class="flex flex-col items-center rounded-lg bg-neutral-700 p-6 shadow transition-colors hover:bg-neutral-600"
+              [routerLink]="['/g']"
+              [queryParams]="{ d: difficulty.code }"
+            >
+              <h3 class="text-lg">{{ difficulty.name }}</h3>
+              <p>
+                @for (star of arrayRef(4); track index; let index = $index) {
+                  <span class="text-xl">{{ index <= difficulty.code ? '&starf;' : '&star;' }}</span>
+                }
+              </p>
+            </a>
           }
         </div>
       </main>

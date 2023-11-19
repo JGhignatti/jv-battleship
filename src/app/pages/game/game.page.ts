@@ -1,18 +1,12 @@
 import { Component } from '@angular/core';
+
 import { BoardComponent } from './components/board/board.component';
+import { PlaceComponent } from './features/place/place.component';
 
 @Component({
   selector: 'jv-game',
   standalone: true,
-  imports: [BoardComponent],
-  template: `
-    <div class="flex h-full w-full justify-center">
-      <div class="container p-4">
-        <div class="aspect-square max-h-full max-w-full">
-          <jv-board />
-        </div>
-      </div>
-    </div>
-  `,
+  imports: [PlaceComponent, BoardComponent],
+  template: ` <jv-place /> `,
 })
 export class GamePage {}

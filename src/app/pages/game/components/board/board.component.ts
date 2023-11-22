@@ -35,6 +35,7 @@ import { getShipSize } from '../../utils/ships';
         @for (square of boardArray; track square.index) {
           <div
             class="p-[2px]"
+            [ngClass]="{ 'cursor-pointer': square.color !== 'none' }"
             (click)="squareClicked.emit(square)"
             (mouseleave)="onMouseLeave()"
             (mouseenter)="onMouseEnter(square.index)"
@@ -42,8 +43,8 @@ import { getShipSize } from '../../utils/ships';
             <div
               class="h-full w-full border border-neutral-700"
               [ngClass]="{
-                'cursor-pointer bg-rose-300 hover:bg-rose-300': square.color === 'full',
-                'cursor-pointer bg-rose-300/30': square.color === 'hover'
+                'bg-rose-300': square.color === 'full',
+                'bg-rose-300/30': square.color === 'hover'
               }"
             ></div>
           </div>

@@ -2,6 +2,7 @@ import { NgClass } from '@angular/common';
 import { Component, Signal, computed, inject } from '@angular/core';
 
 import { Ships } from '../../models/ships.enum';
+import { GameStore } from '../../services/game.store';
 import { ships } from '../../utils/ships';
 import { PlaceBoardComponent } from './components/place-board/place-board.component';
 import { PlaceStore } from './services/place.store';
@@ -22,16 +23,19 @@ import { PlaceStore } from './services/place.store';
             <p class="mb-6">
               Click a ship in the list, than hover over the board and click to position it. Before
               positioning, right click to rotate it, once positioned, click it to remove.
+              <br />
+              After having placed all ships, click "Start" to star the game.
             </p>
 
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-1">
               @for (item of shipsList; track $index) {
                 <div
-                  class="relative flex cursor-pointer flex-col gap-2 rounded-lg bg-neutral-700 px-6 py-4 shadow transition-colors hover:bg-neutral-600"
+                  class="relative flex flex-col gap-2 rounded-lg bg-neutral-700 px-6 py-4 shadow transition-colors hover:bg-neutral-600"
                   [ngClass]="{
                     'outline outline-4 outline-rose-300': selectedShip === item.ship,
                     'cursor-not-allowed text-neutral-400 hover:bg-neutral-700':
-                      !remainingShips().includes(item.ship)
+                      !remainingShips().includes(item.ship),
+                    'cursor-pointer': remainingShips().includes(item.ship)
                   }"
                   (click)="onShipClick(item.ship)"
                 >
@@ -55,9 +59,22 @@ import { PlaceStore } from './services/place.store';
                 </div>
               }
             </div>
+
+            <button
+              class="mt-6 w-full rounded px-4 py-2 font-bold text-neutral-700 transition-colors"
+              [ngClass]="
+                startDisabled()
+                  ? 'cursor-not-allowed bg-neutral-500 hover:bg-neutral-500'
+                  : 'bg-rose-300 hover:bg-rose-300/80'
+              "
+              [disabled]="startDisabled()"
+              (click)="onStartClick()"
+            >
+              Start
+            </button>
           </div>
 
-          <div class="aspect-square max-h-full max-w-full lg:col-span-2">
+          <div class="aspect-square max-h-full max-w-3xl lg:col-span-2 xl:justify-self-center">
             <jv-place-board
               [selectedShip]="selectedShip"
               (resetSelectedShip)="selectedShip = null"
@@ -71,10 +88,12 @@ import { PlaceStore } from './services/place.store';
 export class PlaceComponent {
   selectedShip: Ships | null = null;
   remainingShips!: Signal<Ships[]>;
+  startDisabled!: Signal<boolean>;
 
   readonly arrayRef = Array;
   readonly shipsList = ships;
 
+  private readonly gameStore = inject(GameStore);
   private readonly placeStore = inject(PlaceStore);
 
   constructor() {
@@ -87,6 +106,8 @@ export class PlaceComponent {
             .includes(ship),
       ),
     );
+
+    this.startDisabled = computed(() => this.remainingShips().length !== 0);
   }
 
   onShipClick(ship: Ships): void {
@@ -101,5 +122,9 @@ export class PlaceComponent {
     }
 
     this.selectedShip = toSetShip;
+  }
+
+  onStartClick(): void {
+    this.gameStore.start(this.placeStore.placedShips());
   }
 }
